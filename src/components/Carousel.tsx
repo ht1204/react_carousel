@@ -3,11 +3,11 @@ import './Carousel.scss';
 
 interface CarouselProps {
   images: string[];
-  itemWidth?: number; // px, default 130
-  frameSize?: number; // default 3
-  step?: number; // default 3
-  animationDuration?: number; // ms, default 1000
-  infinite?: boolean; // default false
+  itemWidth?: number;
+  frameSize?: number;
+  step?: number;
+  animationDuration?: number;
+  infinite?: boolean;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -18,42 +18,51 @@ const Carousel: React.FC<CarouselProps> = ({
   animationDuration = 1000,
   infinite = false,
 }) => {
-  const [offset, setOffset] = useState(0); // index offset from 0
-  const maxOffset = images.length - frameSize;
-
+  const [offset, setOffset] = useState(0);
   const listRef = useRef<HTMLUListElement>(null);
 
+  // --- Compute positions and limits safely ---
+  const positions = Math.max(images.length - frameSize + 1, 1);
+  const maxOffset = positions - 1;
+
   const goNext = () => {
-    let newOffset = offset + step;
+    let newOffset;
 
     if (infinite) {
-      newOffset %= images.length;
+      // wrap safely within valid range
+      newOffset = ((offset + step) % positions + positions) % positions;
     } else {
-      newOffset = Math.min(newOffset, maxOffset);
+      // clamp to end
+      newOffset = Math.min(offset + step, maxOffset);
     }
 
     setOffset(newOffset);
   };
 
   const goPrev = () => {
-    let newOffset = offset - step;
+    let newOffset;
 
     if (infinite) {
-      newOffset = (images.length + newOffset) % images.length;
+      // wrap safely backward
+      newOffset = ((offset - step) % positions + positions) % positions;
     } else {
-      newOffset = Math.max(newOffset, 0);
+      // clamp to start
+      newOffset = Math.max(offset - step, 0);
     }
 
     setOffset(newOffset);
   };
 
+  // --- Translate the carousel ---
   const translateX = -(offset * itemWidth);
-
   const listStyle: React.CSSProperties = {
     width: `${images.length * itemWidth}px`,
     transform: `translateX(${translateX}px)`,
     transition: `transform ${animationDuration}ms ease`,
   };
+
+  // Disable navigation if no scrolling is possible
+  const disableNav = images.length <= frameSize;
 
   return (
     <div
@@ -67,11 +76,16 @@ const Carousel: React.FC<CarouselProps> = ({
       <ul className="Carousel__list" ref={listRef} style={listStyle}>
         {images.map((src, index) => (
           <li
-            key={src + index}
+            key={`${src}-${index}`}
             className="Carousel__item"
             style={{ width: itemWidth }}
           >
-            <img src={src} alt={`Slide ${index + 1}`} width={itemWidth} />
+            <img
+              src={src}
+              alt={`Slide ${index + 1}`}
+              width={itemWidth}
+              style={{ display: 'block', width: '100%', height: 'auto' }}
+            />
           </li>
         ))}
       </ul>
@@ -79,16 +93,19 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         type="button"
         className="Carousel__button Carousel__button--prev"
-        onClick={goPrev}
         data-cy="prev"
+        onClick={goPrev}
+        disabled={disableNav}
       >
         Prev
       </button>
+
       <button
         type="button"
         className="Carousel__button Carousel__button--next"
-        onClick={goNext}
         data-cy="next"
+        onClick={goNext}
+        disabled={disableNav}
       >
         Next
       </button>

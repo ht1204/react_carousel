@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import './App.scss';
 import Carousel from './components/Carousel';
 
 const App: React.FC = () => {
   const [itemWidth, setItemWidth] = useState(130);
   const [frameSize, setFrameSize] = useState(3);
   const [step, setStep] = useState(3);
-  const [duration, setDuration] = useState(1000);
+  const [animationDuration, setAnimationDuration] = useState(1000);
   const [infinite, setInfinite] = useState(false);
+
+  useEffect(() => {
+    // ✅ Requirement: The document title must contain "Carousel"
+    document.title = 'Carousel - Demo';
+  }, []);
 
   const images = [
     './img/1.png',
@@ -23,26 +29,28 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <h1 data-cy="title">Carousel Demo</h1>
+      <h1 data-cy="title">Carousel with {images.length} images</h1>
 
       <div className="controls">
         <label htmlFor="itemId">
-          Item Width:
+          Item width:
           <input
             id="itemId"
             type="number"
+            min="50"
             value={itemWidth}
-            onChange={e => setItemWidth(+e.target.value)}
+            onChange={(e) => setItemWidth(Number(e.target.value))}
           />
         </label>
 
         <label htmlFor="frameId">
-          Frame Size:
+          Frame size:
           <input
             id="frameId"
             type="number"
+            min="1"
             value={frameSize}
-            onChange={e => setFrameSize(+e.target.value)}
+            onChange={(e) => setFrameSize(Number(e.target.value))}
           />
         </label>
 
@@ -51,18 +59,20 @@ const App: React.FC = () => {
           <input
             id="stepId"
             type="number"
+            min="1"
             value={step}
-            onChange={e => setStep(+e.target.value)}
+            onChange={(e) => setStep(Number(e.target.value))}
           />
         </label>
 
         <label htmlFor="durationId">
-          Animation Duration:
+          Animation duration (ms):
           <input
             id="durationId"
             type="number"
-            value={duration}
-            onChange={e => setDuration(+e.target.value)}
+            min="0"
+            value={animationDuration}
+            onChange={(e) => setAnimationDuration(Number(e.target.value))}
           />
         </label>
 
@@ -72,7 +82,7 @@ const App: React.FC = () => {
             id="infiniteId"
             type="checkbox"
             checked={infinite}
-            onChange={e => setInfinite(e.target.checked)}
+            onChange={(e) => setInfinite(e.target.checked)}
           />
         </label>
       </div>
@@ -82,7 +92,7 @@ const App: React.FC = () => {
         itemWidth={itemWidth}
         frameSize={frameSize}
         step={step}
-        animationDuration={duration}
+        animationDuration={animationDuration}
         infinite={infinite}
       />
     </div>
