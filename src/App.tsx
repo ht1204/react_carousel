@@ -39,7 +39,7 @@ const App: React.FC = () => {
             type="number"
             min="50"
             value={itemWidth}
-            onChange={(e) => setItemWidth(Number(e.target.value))}
+            onChange={e => setItemWidth(Number(e.target.value))}
           />
         </label>
 
@@ -50,7 +50,7 @@ const App: React.FC = () => {
             type="number"
             min="1"
             value={frameSize}
-            onChange={(e) => setFrameSize(Number(e.target.value))}
+            onChange={e => setFrameSize(Number(e.target.value))}
           />
         </label>
 
@@ -61,7 +61,7 @@ const App: React.FC = () => {
             type="number"
             min="1"
             value={step}
-            onChange={(e) => setStep(Number(e.target.value))}
+            onChange={e => setStep(Number(e.target.value))}
           />
         </label>
 
@@ -72,7 +72,7 @@ const App: React.FC = () => {
             type="number"
             min="0"
             value={animationDuration}
-            onChange={(e) => setAnimationDuration(Number(e.target.value))}
+            onChange={e => setAnimationDuration(Number(e.target.value))}
           />
         </label>
 
@@ -82,7 +82,7 @@ const App: React.FC = () => {
             id="infiniteId"
             type="checkbox"
             checked={infinite}
-            onChange={(e) => setInfinite(e.target.checked)}
+            onChange={e => setInfinite(e.target.checked)}
           />
         </label>
       </div>

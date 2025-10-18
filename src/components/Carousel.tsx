@@ -30,7 +30,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
     if (infinite) {
       // wrap safely within valid range
-      newOffset = ((offset + step) % positions + positions) % positions;
+      newOffset = (((offset + step) % positions) + positions) % positions;
     } else {
       // clamp to end
       newOffset = Math.min(offset + step, maxOffset);
@@ -44,7 +44,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
     if (infinite) {
       // wrap safely backward
-      newOffset = ((offset - step) % positions + positions) % positions;
+      newOffset = (((offset - step) % positions) + positions) % positions;
     } else {
       // clamp to start
       newOffset = Math.max(offset - step, 0);
